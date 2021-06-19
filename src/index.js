@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.json({
-    message: "this is the index route , the api is in /api route",
+    message: "this is the index route , the api is in /api/v1 route",
   });
 });
 

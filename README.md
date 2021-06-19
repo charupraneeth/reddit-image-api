@@ -4,6 +4,12 @@ A simple api wrapper for Reddit images
 
 ## API Reference
 
+#### Get image from a random subreddit
+
+```http
+  GET /api/v1/
+```
+
 #### Get image from a subreddit
 
 ```http

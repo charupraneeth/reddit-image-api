@@ -1,4 +1,6 @@
 const express = require("express");
+const helmet = require("helmet");
+const cors = require("cors");
 const middlewares = require("./middlewares");
 const api = require("./api");
 
@@ -6,6 +8,8 @@ const app = express();
 
 const port = process.env.PORT || 1337;
 
+app.use(cors());
+app.use(helmet());
 app.use(express.json());
 
 app.get("/", (req, res) => {

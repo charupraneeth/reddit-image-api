@@ -14,8 +14,15 @@ const subreddits = [
   "postprocessing",
   "mildlyinteresting",
 ];
-function randomSubreddit() {
+function getRandomSubreddit() {
   return subreddits[Math.floor(Math.random() * subreddits.length)];
+}
+
+function newRandomSubreddit(cachedSubreddits) {
+  const subreddit = getRandomSubreddit();
+  return cachedSubreddits[subreddit]
+    ? newRandomSubreddit(cachedSubreddits)
+    : subreddit;
 }
 
 function filterImage(collection) {
@@ -34,6 +41,7 @@ function filterImage(collection) {
 }
 
 module.exports = {
-  randomSubreddit,
+  getRandomSubreddit,
   filterImage,
+  newRandomSubreddit,
 };

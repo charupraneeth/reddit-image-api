@@ -1,26 +1,62 @@
 const axios = require("axios");
 const express = require("express");
-const { randomSubreddit, filterImage } = require("./utils");
+const {
+  getRandomSubreddit,
+  filterImage,
+  newRandomSubreddit,
+} = require("./utils");
 
 const router = express.Router();
 
 const diyCache = {
   cachedSubreddits: {},
   lastUpdated: Date.now(),
-  cacheTimeLimit: 2000, // 2 millisecons
+  cacheTimeLimit: 60 * 1000, // 1 minute = 60 seconds
 };
-
-router.use((req, res, next) => {
-  if (Object.keys(diyCache.cachedSubreddits).length > 5) {
-    delete diyCache.cachedSubreddits["0"];
-  }
-  next();
-});
 
 // random subreddit
 router.get("/", async (req, res) => {
-  const subreddit = randomSubreddit();
+  const subreddit = getRandomSubreddit();
   res.redirect(`/api/v1/${subreddit}`);
+});
+
+// get random image
+router.get("/random", async (req, res, next) => {
+  try {
+    const keys = Object.keys(diyCache.cachedSubreddits);
+    if (
+      keys.length < 3 ||
+      Date.now() - diyCache.lastUpdated > diyCache.cacheTimeLimit
+    ) {
+      // get new random subreddit
+      const subreddit = newRandomSubreddit(diyCache.cachedSubreddits);
+      console.log("add to cache", subreddit);
+      const baseUrl = `https://www.reddit.com/r/${subreddit}.json`;
+      const {
+        data: {
+          data: { children, after },
+        },
+      } = await axios.get(baseUrl);
+      const images = filterImage(children);
+      diyCache.cachedSubreddits[baseUrl] = { subreddit, images, after };
+      diyCache.lastUpdated = Date.now();
+    }
+
+    // return from cache
+    const newKeys = Object.keys(diyCache.cachedSubreddits);
+    const randomCachedSubreddit =
+      diyCache.cachedSubreddits[
+        newKeys[Math.floor(Math.random() * newKeys.length)]
+      ];
+    const randomImage =
+      randomCachedSubreddit.images[
+        Math.floor(Math.random() * randomCachedSubreddit.images.length)
+      ];
+    res.json({ image: randomImage });
+    // res.send(`<img src=${randomImage.image} alt=${randomImage.title}>`);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // specific subreddit
@@ -43,8 +79,12 @@ router.get("/:subreddit", async (req, res, next) => {
       } = await axios.get(baseUrl);
 
       const images = filterImage(children);
-      diyCache.cachedSubreddits[baseUrl] = { images, after };
+      if (images.length > 2) {
+        diyCache.cachedSubreddits[baseUrl] = { subreddit, images, after };
+        diyCache.lastUpdated = Date.now();
+      }
       res.json({
+        subreddit,
         images,
         after,
       });

@@ -23,11 +23,7 @@ router.get("/", async (req, res) => {
 // get random image
 router.get("/random", async (req, res, next) => {
   try {
-    const keys = Object.keys(diyCache.cachedSubreddits);
-    if (
-      keys.length < 3 ||
-      Date.now() - diyCache.lastUpdated > diyCache.cacheTimeLimit
-    ) {
+    if (Date.now() - diyCache.lastUpdated > diyCache.cacheTimeLimit) {
       // get new random subreddit
       const subreddit = newRandomSubreddit(diyCache.cachedSubreddits);
       console.log("add to cache", subreddit);

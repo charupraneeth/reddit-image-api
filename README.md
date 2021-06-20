@@ -10,6 +10,12 @@ A simple api wrapper for Reddit images
   GET /api/v1/
 ```
 
+#### Get random image from random subreddit
+
+```http
+  GET /api/v1/random
+```
+
 #### Get image from a subreddit
 
 ```http

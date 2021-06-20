@@ -1,19 +1,27 @@
 const subreddits = [
-  "aww",
-  "natureporn",
-  "pics",
-  "pic",
-  "photo",
   "abandonedporn",
-  "images",
+  "animalporn",
+  "aww",
+  "designporn",
   "earthporn",
-  "spaceporn",
+  "foodporn",
+  "images",
   "itookapicture",
-  "photographs",
-  "photocritique",
-  "postprocessing",
+  "machineporn",
+  "macroporn",
   "mildlyinteresting",
+  "natureporn",
+  "notitle",
+  "photo",
+  "photocritique",
+  "photographs",
+  "pic",
+  "pics",
+  "postprocessing",
+  "roadporn",
+  "spaceporn"
 ];
+
 function getRandomSubreddit() {
   return subreddits[Math.floor(Math.random() * subreddits.length)];
 }

@@ -25,7 +25,7 @@ router.get("/random", async (req, res, next) => {
   try {
     const keys = Object.keys(diyCache.cachedSubreddits);
     if (
-      keys.length < 5 ||
+      keys.length < 6 ||
       Date.now() - diyCache.lastUpdated > diyCache.cacheTimeLimit
     ) {
       // get new random subreddit

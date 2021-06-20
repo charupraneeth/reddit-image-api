@@ -19,7 +19,7 @@ const subreddits = [
   "pics",
   "postprocessing",
   "roadporn",
-  "spaceporn"
+  "spaceporn",
 ];
 
 function getRandomSubreddit() {
